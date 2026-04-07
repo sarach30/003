@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-Year Relationship Reflection</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 1.5rem 1rem; }
+  .card { max-width: 500px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 1.75rem 1.5rem; box-shadow: 0 2px 16px rgba(0,0,0,0.07); }
+  h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  p { font-size: 14px; line-height: 1.7; color: #555; }
+  .section-list { display: flex; flex-direction: column; gap: 8px; margin: 1.25rem 0; }
+  .section-pill { border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+  .section-pill span.label { font-size: 14px; font-weight: 500; }
+  .section-pill span.count { font-size: 12px; opacity: 0.7; margin-left: 4px; }
+  .meta { font-size: 12px; color: #888; text-align: center; margin-bottom: 1.25rem; line-height: 1.8; }
+  .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+  .btn:hover { opacity: 0.88; }
+  .btn-primary { background: #7F77DD; color: #fff; }
+  .btn-outline { background: transparent; border: 1px solid #ccc; color: #444; margin-top: 10px; }
+  .progress-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+  .progress-bar { flex: 1; background: #eee; border-radius: 4px; height: 5px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
+  .progress-label { font-size: 12px; color: #888; white-space: nowrap; }
+  .sec-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .sec-icon { border-radius: 10px; padding: 8px 12px; font-size: 22px; }
+  .sec-title { font-size: 16px; font-weight: 600; }
+  .sec-sub { font-size: 12px; color: #888; margin-top: 2px; }
+  .q-block { border: 1px solid #e8e8e8; border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; background: #fafafa; }
+  .q-text { font-size: 14px; font-weight: 500; line-height: 1.6; margin-bottom: 4px; }
+  .q-hint { font-size: 12px; color: #888; font-style: italic; line-height: 1.5; margin-bottom: 10px; }
+  textarea { width: 100%; resize: vertical; font-size: 14px; line-height: 1.6; padding: 8px 10px; border-radius: 8px; border: 1px solid #ddd; background: #fff; color: #1a1a1a; outline: none; font-family: inherit; transition: border 0.2s; }
+  textarea:focus { border-color: #7F77DD; }
+  .nav { display: flex; gap: 10px; margin-top: 1.5rem; }
+  .nav .btn { flex: 1; padding: 11px; font-size: 14px; }
+  .skip-note { text-align: center; font-size: 12px; color: #aaa; margin-top: 8px; }
+  .finish-icon { text-align: center; font-size: 42px; margin-bottom: 10px; }
+  .tips { background: #f5f4f0; border-radius: 10px; padding: 14px 16px; margin: 1rem 0; }
+  .tips p { font-size: 13px; font-weight: 500; color: #1a1a1a; margin-bottom: 6px; }
+  .tips ul { padding-left: 18px; font-size: 13px; color: #555; line-height: 2; }
+  .summary-toggle { width: 100%; padding: 11px; background: transparent; border: 1px solid #ccc; border-radius: 10px; font-size: 14px; cursor: pointer; color: #444; margin-bottom: 10px; }
+  .summary-section { border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+  .summary-sec-head { padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
+  .summary-sec-head span { font-size: 13px; font-weight: 600; }
+  .summary-q { padding: 10px 14px; border-top: 1px solid #eee; }
+  .summary-q .sq { font-size: 12px; color: #888; font-style: italic; margin-bottom: 4px; }
+  .summary-q .sa { font-size: 13px; color: #1a1a1a; white-space: pre-wrap; }
+  .summary-q .sa.empty { color: #bbb; font-style: italic; }
+  @media (max-width: 400px) { .card { padding: 1.25rem 1rem; } }
+</style>
+</head>
+<body>
+<div class="card" id="app"></div>
+
+<script>
+const sections = [
+  {
+    id: "feelings", title: "Feelings & Comfort", icon: "💛", color: "#BA7517", bg: "#FAEEDA",
+    questions: [
+      { q: "How do you feel about this relationship overall right now, compared to 1–2 years ago?", hint: "Do you feel more at ease, more uncertain, or has something shifted?" },
+      { q: "What moment in these 3 years made you feel the most genuinely loved?", hint: "It can be a small or big moment." },
+      { q: "Is there something you often hold back and don't feel comfortable sharing with your partner? Why?", hint: "You don't need to write what it is — just reflect on whether you feel safe being honest." },
+    ]
+  },
+  {
+    id: "communication", title: "Communication & Conflict", icon: "💬", color: "#7F77DD", bg: "#EEEDFE",
+    questions: [
+      { q: "How do you two usually resolve arguments or disagreements?", hint: "Who tends to give in? Are issues truly resolved, or just met with silence?" },
+      { q: "Are there topics you consistently avoid bringing up? What are they?", hint: "For example: the future, family, finances, or something else." },
+    ]
+  },
+  {
+    id: "connection", title: "Connection & Intimacy", icon: "🤝", color: "#993556", bg: "#FBEAF0",
+    questions: [
+      { q: "Do you still feel genuinely connected to your partner — not just as a significant other, but as a close friend?", hint: "Share one thing that still makes you feel close to them." },
+      { q: "How often do you do something new or meaningful together lately?", hint: "If rarely, what's been getting in the way?" },
+    ]
+  },
+  {
+    id: "future", title: "Future & Commitment", icon: "🌱", color: "#0F6E56", bg: "#E1F5EE",
+    questions: [
+      { q: "When you picture your life 5 years from now, is your partner in that picture? What does it look like?", hint: "Write as freely as you'd like." },
+      { q: "Have you ever talked about long-term commitment (marriage, living together, etc.)? How did each of you react?", hint: "If it's never come up, why do you think that is?" },
+    ]
+  },
+  {
+    id: "self", title: "You Within This Relationship", icon: "🪞", color: "#185FA5", bg: "#E6F1FB",
+    questions: [
+      { q: "Do you feel like you can be fully yourself around your partner?", hint: "Is there a part of you that you hide or change for the sake of this relationship?" },
+      { q: "What is one thing you'd like to change about yourself within this relationship?", hint: "Not about your partner — but about how you show up or contribute." },
+      { q: "If you could be completely honest: what are you most afraid of when it comes to this relationship?", hint: "There are no wrong answers." },
+    ]
+  }
+];
+
+const totalQ = sections.reduce((a, s) => a + s.questions.length, 0);
+let step = 0;
+let answers = {};
+let showSummary = false;
+
+function getAnswer(sid, i) { return answers[`${sid}_${i}`] || ""; }
+function setAnswer(sid, i, val) { answers[`${sid}_${i}`] = val; }
+function answeredInSection(s) { return s.questions.filter((_, i) => getAnswer(s.id, i).trim()).length; }
+function totalAnswered() { return sections.reduce((a, s) => a + answeredInSection(s), 0); }
+
+function render() {
+  const app = document.getElementById("app");
+  if (step === 0) { app.innerHTML = renderIntro(); }
+  else if (step <= sections.length) { app.innerHTML = renderSection(sections[step - 1]); bindTextareas(sections[step - 1]); }
+  else { app.innerHTML = renderFinish(); }
+}
+
+function renderIntro() {
+  return `
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="font-size:44px;margin-bottom:12px">🪞</div>
+      <h2>3-Year Relationship Reflection</h2>
+      <p style="margin-top:8px">This isn't a quiz with right or wrong answers. It's a space for you to think honestly about the relationship you've been building. No one is here to judge your answers.</p>
+    </div>
+    <div class="section-list">
+      ${sections.map(s => `
+        <div class="section-pill" style="background:${s.bg}">
+          <span style="font-size:18px">${s.icon}</span>
+          <span class="label" style="color:${s.color}">${s.title}</span>
+          <span class="count" style="color:${s.color}">${s.questions.length} questions</span>
+        </div>`).join("")}
+    </div>
+    <p class="meta">✍️ ${totalQ} reflection questions &nbsp;·&nbsp; Write as much or as little as you need &nbsp;·&nbsp; 🔒 Just for you</p>
+    <button class="btn btn-primary" onclick="goStep(1)">Start Reflection →</button>
+  `;
+}
+
+function renderSection(s) {
+  const answered = answeredInSection(s);
+  return `
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" style="width:${(step/sections.length)*100}%;background:${s.color}"></div></div>
+      <span class="progress-label">${step}/${sections.length}</span>
+    </div>
+    <div class="sec-header">
+      <div class="sec-icon" style="background:${s.bg}">${s.icon}</div>
+      <div>
+        <div class="sec-title" style="color:${s.color}">${s.title}</div>
+        <div class="sec-sub">Be as honest as you can — there are no wrong answers</div>
+      </div>
+    </div>
+    ${s.questions.map((item, i) => `
+      <div class="q-block">
+        <div class="q-text">${item.q}</div>
+        <div class="q-hint">${item.hint}</div>
+        <textarea rows="3" data-sid="${s.id}" data-idx="${i}" placeholder="Write your thoughts here..." style="border-color:${getAnswer(s.id,i).trim() ? s.color : '#ddd'}">${getAnswer(s.id, i)}</textarea>
+      </div>`).join("")}
+    <div class="nav">
+      ${step > 1 ? `<button class="btn btn-outline" style="flex:1" onclick="goStep(${step-1})">← Back</button>` : ""}
+      <button class="btn btn-primary" style="flex:2" onclick="goStep(${step===sections.length ? sections.length+1 : step+1})">${step===sections.length ? "See My Reflection →" : "Next →"}</button>
+    </div>
+    <p class="skip-note">${answered}/${s.questions.length} answered — feel free to skip anything that feels too heavy</p>
+  `;
+}
+
+function renderFinish() {
+  return `
+    <div class="finish-icon">🌿</div>
+    <div style="text-align:center;margin-bottom:1.25rem">
+      <h2>Reflection Complete</h2>
+      <p style="margin-top:8px">You answered ${totalAnswered()} out of ${totalQ} questions. There's no score — what matters is your honesty with yourself.</p>
+    </div>
+    <div class="tips">
+      <p>📌 What you can do next</p>
+      <ul>
+        <li>Read back through your answers — notice which ones came easily and which felt heavy</li>
+        <li>Pick 1–2 topics you'd like to bring up with your partner</li>
+        <li>Consider doing this together and comparing your perspectives</li>
+      </ul>
+    </div>
+    <button class="summary-toggle" onclick="toggleSummary()">${showSummary ? "Hide My Answers ↑" : "View All My Answers ↓"}</button>
+    ${showSummary ? `<div id="summary">${sections.map(s => `
+      <div class="summary-section">
+        <div class="summary-sec-head" style="background:${s.bg}">
+          <span>${s.icon}</span><span style="color:${s.color}">${s.title}</span>
+        </div>
+        ${s.questions.map((item, i) => {
+          const val = getAnswer(s.id, i);
+          return `<div class="summary-q">
+            <div class="sq">${item.q}</div>
+            <div class="sa ${val.trim() ? "" : "empty"}">${val.trim() || "— not answered"}</div>
+          </div>`;
+        }).join("")}
+      </div>`).join("")}</div>` : ""}
+    <button class="btn btn-outline" onclick="resetAll()">Start Over</button>
+  `;
+}
+
+function goStep(n) {
+  step = n;
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function toggleSummary() {
+  showSummary = !showSummary;
+  render();
+}
+
+function resetAll() {
+  answers = {};
+  step = 0;
+  showSummary = false;
+  render();
+}
+
+function bindTextareas(s) {
+  document.querySelectorAll("textarea[data-sid]").forEach(ta => {
+    ta.addEventListener("input", function() {
+      const sid = this.dataset.sid;
+      const idx = parseInt(this.dataset.idx);
+      setAnswer(sid, idx, this.value);
+      const sec = sections.find(s => s.id === sid);
+      this.style.borderColor = this.value.trim() ? sec.color : "#ddd";
+      const answered = answeredInSection(sec);
+      const note = document.querySelector(".skip-note");
+      if (note) note.textContent = `${answered}/${sec.questions.length} answered — feel free to skip anything that feels too heavy`;
+    });
+  });
+}
+
+render();
+</script>
+</body>
+</html>
